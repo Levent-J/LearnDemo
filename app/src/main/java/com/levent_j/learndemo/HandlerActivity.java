@@ -17,11 +17,11 @@ public class HandlerActivity extends BaseActivity{
 
     private TextView test;
     private int num=10;
-    private Handler handler = new Handler(new Handler.Callback() {
+    private Handler handler = new MyHandler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            test.setText("handler 接收到what" + message.what);
-            return false;
+            doSomething(message.what+"handler自带的handler");
+            return true;
         }
     });
 
@@ -50,11 +50,27 @@ public class HandlerActivity extends BaseActivity{
                             }
                         }
                         num--;
-                        handler.sendEmptyMessage(num);
-
+                        Message msg = new Message();
+                        handler.sendMessage(msg);
                     }
                 }).start();
             }
         });
+    }
+
+    public void doSomething(String s){
+        test.setText(s);
+    }
+
+    class MyHandler extends Handler{
+
+        public MyHandler(Callback callback) {
+            super(callback);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            doSomething(msg.what+"handler的handlermessage方法");
+        }
     }
 }
